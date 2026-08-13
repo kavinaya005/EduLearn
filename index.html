@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EduLearn — Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 flex items-center justify-center">
+  <main class="w-full max-w-md p-6">
+    <div class="bg-white rounded-2xl shadow-md p-8">
+      <header class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-indigo-600">EduLearn</h1>
+        <p class="text-sm text-gray-500">Sign in to your learning dashboard</p>
+      </header>
+
+      <form id="loginForm" class="space-y-4" novalidate>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email</label>
+          <input id="email" type="email" required placeholder="you@example.com" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm p-2 focus:border-indigo-400 focus:ring-indigo-200" />
+          <p id="emailError" class="mt-1 text-xs text-red-600 hidden">Please enter a valid email.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Password</label>
+          <input id="password" type="password" required minlength="6" placeholder="••••••" class="mt-1 block w-full rounded-md border-gray-200 shadow-sm p-2 focus:border-indigo-400 focus:ring-indigo-200" />
+          <p id="passError" class="mt-1 text-xs text-red-600 hidden">Password must be at least 6 characters.</p>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <label class="inline-flex items-center text-sm text-gray-600">
+            <input id="remember" type="checkbox" class="mr-2" /> Remember me
+          </label>
+          <a href="#" class="text-sm text-indigo-600 hover:underline">Forgot?</a>
+        </div>
+
+        <button type="submit" class="w-full py-2 bg-indigo-600 text-white rounded-md">Sign in</button>
+      </form>
+
+      <div id="message" class="mt-4 text-center text-sm text-green-600 hidden"></div>
+
+      <p class="mt-6 text-center text-xs text-gray-400">This is a front-end demo for educational use only.</p>
+    </div>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const remember = document.getElementById('remember');
+    const emailError = document.getElementById('emailError');
+    const passError = document.getElementById('passError');
+    const message = document.getElementById('message');
+
+    // Load remembered email
+    if (localStorage.getItem('edu_email')) {
+      email.value = localStorage.getItem('edu_email');
+      remember.checked = true;
+    }
+
+    function validate() {
+      let ok = true;
+      emailError.classList.add('hidden');
+      passError.classList.add('hidden');
+
+      if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        emailError.classList.remove('hidden');
+        ok = false;
+      }
+      if (!password.value || password.value.length < 6) {
+        passError.classList.remove('hidden');
+        ok = false;
+      }
+      return ok;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      message.classList.add('hidden');
+      if (!validate()) return;
+
+      if (remember.checked) localStorage.setItem('edu_email', email.value);
+      else localStorage.removeItem('edu_email');
+
+      // Simulate login success
+      message.textContent = 'Welcome — redirecting to your dashboard...';
+      message.classList.remove('hidden');
+
+      setTimeout(() => {
+        // In an actual app you would navigate to the dashboard
+        message.textContent = 'This demo does not connect to a backend.';
+      }, 900);
+    });
+  </script>
+</body>
+</html>
